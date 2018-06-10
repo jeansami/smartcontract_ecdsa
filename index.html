@@ -1,0 +1,129 @@
+<!-- https://stackoverflow.com/questions/32612690/bootstrap-4-glyphicons-migration 
+	 https://bootsnipp.com/snippets/featured/advanced-dropdown-search
+	 https://www.w3schools.com/bootstrap4/bootstrap_navbar.asp
+-->
+
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> <!-- http://paulund.developpez.com/tutoriels/html/metatag-viewport/ -->	
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		<title> smartcontract for ECDSA / ECIES </title>
+		
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		<link href="css/index.css" rel="stylesheet">
+	</head>
+
+	<body>		
+		
+		<div class="container-fullwidth">
+			<nav class="navbar navbar-expand-sm bg-light navbar-light">
+			
+				<!-- Toggler/collapsibe Button -->
+				<button class="navbar-toggler order-3 dual-collapse2" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+	
+				<div class="navbar-brand"><img src="images/ethereum.png" alt="Logo" style="width:30px"></div>
+				<div class="navbar-brand">ECDSA-ECIES-blockchain</div>
+				
+				<div class="navbar-collapse collapse w-100 order-3 dual-collapse2" id="collapsibleNavbar">
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item active">
+							<a class="nav-link" href="#">Sign and encrypt</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">Verify and decrypt</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+		
+		<div id="bodyContainer" class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<form class="form-horizontal">
+						<fieldset>
+
+							<!-- Form Name -->
+							<legend>Sign</legend>
+
+							<!-- Text input-->
+							<div class="form-group">
+								<label class="control-label" for="Message">Message</label>  
+								<div class="">
+								<input id="Message" name="Message" type="text" placeholder="Enter a message..." class="form-control input-md">
+								<span class="help-block">help</span>  
+								</div>
+							</div>
+
+							<!-- File Button --> 
+							<div class="form-group">
+								<label class="control-label" for="fileToSend">File</label>
+								<div class="">
+									<button id="fileToSend" name="fileToSend" class="btn btn-primary input-file"> load file </button>
+									<span> no file selected </span>
+								</div>
+							</div>
+
+							<!-- Button -->
+							<div class="form-group">
+							<label class="control-label" for="signButton"></label>
+							<div class="">
+								<button id="signButton" name="signButton" class="btn btn-primary">Sign</button>
+							</div>
+							</div>
+
+						</fieldset>
+					</form>
+
+				</div>	
+
+				<div class="col-md-6">
+					<form class="form-horizontal">
+						<fieldset>
+
+							<!-- Form Name -->
+							<legend>Decrypt</legend>
+
+							<!-- Textarea -->
+							<div class="form-group">
+								<label class="control-label" for="textareaDecrypt">Text</label>
+								<div class="">                     
+									<textarea class="form-control" id="textareaDecrypt" name="textareaDecrypt">paste the text you want to decrypt...</textarea>
+								</div>
+							</div>
+
+							<!-- File Button --> 
+							<div class="form-group">
+								<label class="control-label" for="FileToDecrypt">File</label>
+								<div class="">
+									<button id="FileToDecrypt" name="FileToDecrypt" class="btn btn-primary input-file">load file</button>
+								</div>
+							</div>
+
+							<!-- Button -->
+							<div class="form-group">
+								<label class=" control-label" for="decryptButton"></label>
+								<div class="">
+									<button id="decryptButton" name="decryptButton" class="btn btn-primary">Decrypt</button>
+								</div>
+							</div>
+
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+	</body>
+	
+</html>
