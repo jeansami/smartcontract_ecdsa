@@ -15,6 +15,9 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 		<link href="css/index.css" rel="stylesheet">
+		
+		<script type="text/javascript" src="js/web3.min.js"></script>
+		<script type="text/javascript" src="js/elliptic.min.js"></script>
 	</head>
 
 	<body>		
@@ -33,10 +36,10 @@
 				<div class="navbar-collapse collapse w-100 order-3 dual-collapse2" id="collapsibleNavbar">
 					<ul class="navbar-nav ml-auto">
 						<li class="nav-item active">
-							<a class="nav-link" href="#">Sign and encrypt</a>
+							<a class="nav-link" href="#">Sign / Verify</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="#">Verify and decrypt</a>
+							<a class="nav-link" href="#">Encrypt / Decrypt</a>
 						</li>
 					</ul>
 				</div>
@@ -44,86 +47,125 @@
 		</div>
 		
 		<div id="bodyContainer" class="container">
+			<!--<div class="row">
+				<div class="col-md-4"></div>
+				<div class="col-md-4">
+					<button id="generateKeys" class="btn btn-primary"> generate new ecdsa keys </button>
+				</div>
+			</div>-->
 			<div class="row">
 				<div class="col-md-6">
-					<form class="form-horizontal">
+					<div class="sign_verify form-horizontal">
 						<fieldset>
 
 							<!-- Form Name -->
-							<legend>Sign</legend>
-
-							<!-- Text input-->
-							<div class="form-group">
-								<label class="control-label" for="Message">Message</label>  
-								<div class="">
-								<input id="Message" name="Message" type="text" placeholder="Enter a message..." class="form-control input-md">
-								<span class="help-block">help</span>  
-								</div>
-							</div>
-
-							<!-- File Button --> 
-							<div class="form-group">
-								<label class="control-label" for="fileToSend">File</label>
-								<div class="">
-									<button id="fileToSend" name="fileToSend" class="btn btn-primary input-file"> load file </button>
-									<span> no file selected </span>
-								</div>
-							</div>
-
-							<!-- Button -->
-							<div class="form-group">
-							<label class="control-label" for="signButton"></label>
-							<div class="">
-								<button id="signButton" name="signButton" class="btn btn-primary">Sign</button>
-							</div>
-							</div>
-
-						</fieldset>
-					</form>
-
-				</div>	
-
-				<div class="col-md-6">
-					<form class="form-horizontal">
-						<fieldset>
-
-							<!-- Form Name -->
-							<legend>Decrypt</legend>
+							<legend>Sign text / file</legend>
 
 							<!-- Textarea -->
 							<div class="form-group">
-								<label class="control-label" for="textareaDecrypt">Text</label>
+								<label class="control-label" for="textToSign">Text to sign</label>
 								<div class="">                     
-									<textarea class="form-control" id="textareaDecrypt" name="textareaDecrypt">paste the text you want to decrypt...</textarea>
+									<textarea class="form-control" id="textToSign" name="textToSign" placeholder="Text to be signed"></textarea>
 								</div>
 							</div>
 
 							<!-- File Button --> 
 							<div class="form-group">
-								<label class="control-label" for="FileToDecrypt">File</label>
+								<label class="control-label" for="FileToSign">File to sign</label>
 								<div class="">
-									<button id="FileToDecrypt" name="FileToDecrypt" class="btn btn-primary input-file">load file</button>
+									<input id="fileToSign" name="FileToSign" class="input-file" type="file">
 								</div>
 							</div>
 
 							<!-- Button -->
-							<div class="form-group">
-								<label class=" control-label" for="decryptButton"></label>
+							<div style="text-align:center" class="form-group">
 								<div class="">
-									<button id="decryptButton" name="decryptButton" class="btn btn-primary">Decrypt</button>
+									<button id="signButton" name="signButton" class="btn btn-primary">Sign</button>
 								</div>
 							</div>
 
 						</fieldset>
-					</form>
+					</div>
+				</div>
+				
+				<div class="col-md-6">
+					
+					<div class="sign_verify form-horizontal">
+								
+							<fieldset>
+
+								<!-- Form Name -->
+								<legend> Verify signature </legend>
+								
+								<ul class="nav nav-tabs" role="tablist">
+									<li class="nav-item">
+										<a class="nav-link active" href="#textAndFile" role="tab" data-toggle="tab">Text / File</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="#signature" role="tab" data-toggle="tab">Signature</a>
+									</li>
+								</ul>
+								
+								<div class="tab-content">
+									<div role="tabpanel" class="tab-pane active" id="textAndFile">
+										<!-- Textarea -->
+										<div class="form-group">
+											<label class="control-label" for="textToVerify">Text to verify</label>
+											<div class="">                     
+												<textarea class="form-control" id="textToVerify" name="textToVerify" placeholder="Text to be verified"></textarea>
+											</div>
+										</div>
+
+										<!-- File Button --> 
+										<div class="form-group">
+											<label class="control-label" for="FileToVerify">File to verify</label>
+											<div class="">
+												<input id="fileToVerify" name="FileToVerify" class="input-file" type="file">
+											</div>
+										</div>
+									</div>
+									<div role="tabpanel" class="tab-pane" id="signature">
+										<!-- Textarea -->
+										<div class="form-group">
+											<label class="control-label" for="singature_text"> Signature (Text) </label>
+											<div class="">                     
+												<textarea class="form-control" id="signatureText" name="singature_text" placeholder="Enter signature"></textarea>
+											</div>
+										</div>
+
+										<!-- File Button --> 
+										<div class="form-group">
+											<label class="control-label" for="signature_File">Signature (File)</label>
+											<div class="">
+												<input id="signatureFile" name="signature_File" class="input-file" type="file">
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<!-- Button -->
+								<div style="text-align:center" class="form-group">
+									<div>
+										<button id="verifyButton" name="verifyButton" class="btn btn-primary">Verify</button>
+									</div>
+								</div>
+							
+							</fieldset>
+						</div>
+					</div>
+			</div>
+			
+			<div class="row">
+				<div id="console" class="col-md-12">
 				</div>
 			</div>
 		</div>
-		
+	
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 		<script type="text/javascript" src="js/index.js"></script>
+		<script type="text/javascript" src="js/fileHandler.js"></script>
 	</body>
 	
 </html>
