@@ -1,10 +1,9 @@
-var EC = elliptic.ec;
-var ec = new EC('secp256k1');
 var key;
 var web3js;
+var contractAddress = "";
+var contract;
 
 window.addEventListener('load', function() {
-	//generate_new_ecdsa_keys();
 	// Checking if Web3 has been injected by the browser (Mist/MetaMask)
 	if (typeof web3 !== 'undefined') {
 	  // Use Mist/MetaMask's provider
@@ -19,6 +18,8 @@ window.addEventListener('load', function() {
 	} else {
 	  alert('The File APIs are not fully supported in this browser.');
 	}
+	
+	//contract = new web3js.eth.Contract(/* put ABI here */, contractAddress);
 });
 
 /* Sign form */
@@ -30,10 +31,15 @@ function onSignButtonClicked()
 {
 	var textToSign = document.getElementById("textToSign").value;
 	
+	/* if there is text we sign it else we sign the file */
 	if( textToSign != "" )
-		display_message("success" , "Text hash: " + signText( textToSign ));
-	
-	signFile("fileToSign");
+	{
+		var hash = hashText( textToSign );
+		display_message("success" , "hash (" + textToSign + ") : " + hash);
+		sign_hash(hash , textToSign , web3.eth.accounts[0] , "text");
+	}
+	else
+		signFile("fileToSign");
 }
 
 function signFile(fileId)
@@ -54,17 +60,44 @@ verifyButton.addEventListener("click" , onVerifyButtonClicked);
 function onVerifyButtonClicked()
 {
 	var textToVerify = document.getElementById("textToVerify").value;
+	var signature = document.getElementById("signatureText").value;
+	var address = document.getElementById("address").value;
 	
+	if( signature == "" )
+	{
+		display_message("warning" , "No signature provided");
+		return;
+	}
+	
+	console.log(signature);
 	if( textToVerify != "" )
-		display_message("success" , "Text hash: " + signText( textToVerify ));
-	
-	verifyFile("fileToVerify");
+	{	
+		var hash = hashText( textToVerify );
+		display_message("success" , "hash (" + textToVerify + ") : " + hash);
+		if( address == "" )
+		{
+			recoverAddr(msgHash, signature).then(function(result)
+			{
+				display_message("info" , result[0] + " was signed by " + result[1]);
+			});
+		}
+		else
+			isSigned(web3.eth.accounts[0], signature , textToVerify).then(function(result) {
+				if( result[2] )
+					display_message("success" , result[1] + " was signed by " + result[0]);
+				else
+					display_message("error" , result[1] + " wasn't signed by " + result[0]);
+			});
+	}		
+	else
+		verifyFile("fileToVerify");
 }
 
 function verifyFile(fileId)
 {
 	var signSuccess = retrieveFile(fileId);
 	
+	/* if there is text we verify it else we verify the file */
 	if( signSuccess )
 		check_hash_ready();
 	else
@@ -79,7 +112,10 @@ function check_hash_ready()
 		setTimeout(check_hash_ready , 500);
 	}
 	else
-		display_message("success" ,"file hash: " + finalHash);
+	{
+		display_message("success" ,"hash (" + lastFileHashed + ") : " + finalHash);
+		sign_hash(finalHash , lastFileHashed , web3.eth.accounts[0] , "file");
+	}
 }
 
 /* function for console */
@@ -104,35 +140,6 @@ function display_message(type , message)
 	{
 		eventConsole.append('<div class="eventConsole alert alert-warning">' + message + "</div>");
 	}
+	
+	document.getElementById("console").scrollTop =  9999999;
 }
-
-/* ecdsa signature (not using Ethereum) */
-
-/*document.getElementById("generateKeys").addEventListener("click" , generate_new_ecdsa_keys); 
-
-function generate_new_ecdsa_keys()
-{
-	console.log("genrating...");
-	key = ec.genKeyPair();
-}
-
-function signECDSA(msgHash)
-{
-	var signature = key.sign(msgHash);
-	console.log(signature);
-	// Export DER encoded signature in Array
-	var derSign = signature.toDER();
-	console.log(derSign);
-}
-
-function verify_ecdsa_signature(pubPoint , msgHash , signature)
-{
-	var x = pubPoint.getX();
-	var y = pubPoint.getY();
-
-	var pub = pubPoint.encode('hex');
-
-	var key = ec.keyFromPublic(pub, 'hex');
-
-	console.log( key.verify(msgHash, signature) );
-}*/

@@ -5,8 +5,10 @@ https://stackoverflow.com/questions/7015544/calculating-a-hash-code-for-a-large-
 
 */
 
-var blockSize = 1024;
+/* number of bytes for each read on a file */
+var blockSize = 10000; 
 var finalHash = "";
+var lastFileHashed = "";
 
 function retrieveFile(fileId)
 {
@@ -21,6 +23,7 @@ function retrieveFile(fileId)
     }
 
     var file = files[0];
+	lastFileHashed = file.name;
     var start = 0;
     var stop = min( start + blockSize - 1 , file.size - 1 );
 
@@ -30,7 +33,7 @@ function retrieveFile(fileId)
     reader.onloadend = function(evt) {
       if (evt.target.readyState == FileReader.DONE) { // DONE == 2
      
-		hashes.push( signText( evt.target.result ) );
+		hashes.push( hashText( evt.target.result ) );
 		
 		if( stop != file.size - 1 )
 		{
@@ -45,7 +48,7 @@ function retrieveFile(fileId)
 			for(var i = 0 ; i < hashes.length ; i++)
 				concatedHash += hashes[i];
 			
-			finalHash = signText(concatedHash);
+			finalHash = hashText(concatedHash);
 		}
       }
     };
@@ -56,7 +59,7 @@ function retrieveFile(fileId)
 	return true;
 }
 
-function signText(text)
+function hashText(text)
 {
 	return web3.sha3(text);
 }
